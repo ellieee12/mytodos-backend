@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "mytodos",
   "version": "1.0.0",
   "description": "",
   "main": "./src/app.js",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
-    "@prisma/client": "^7.10.0",
+    "@prisma/client": "^6.19.3",
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "nodemon": "^1.14.10",

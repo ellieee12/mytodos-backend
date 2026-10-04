@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -14,20 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  user_id       Int        @default(autoincrement()) @id
-  first_name    String    
-  last_name     String
-  email         String
-  pwd           String
-  tasks         Task[]
+model mytodos_task {
+  task_id      Int          @default(autoincrement())
+  name         String
+  done         Boolean?
+  user_id      Int
+  mytodos_user mytodos_user @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([task_id, user_id])
 }
 
-model Task {
-  task_id       Int       @default(autoincrement())   @id
-  name          String
-  done          Boolean
-  user_id       Int
-  user          User      @relation(fields:[user_id],references:[user_id],onDelete:Cascade)
+model mytodos_user {
+  user_id      Int            @id @default(autoincrement())
+  first_name   String
+  last_name    String?
+  email        String
+  pwd          String
+  mytodos_task mytodos_task[]
 }
-
