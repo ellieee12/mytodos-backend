@@ -8,8 +8,13 @@ router.use(cookieParser());
 router.use(requireAuth);
 
 router.get('/',async (req,res)=>{
+    console.log(req.user.user_id);
     try{
-        const tasks = await prisma.mytodos_task.findMany();
+        const tasks = await prisma.mytodos_task.findMany({
+            where:{
+                user_id:req.user.user_id
+            }
+        });
         res.send(tasks);
     }catch(err){
         console.log(err);
@@ -20,10 +25,10 @@ router.get('/',async (req,res)=>{
 router.get('/:id',async (req,res)=>{
     const id = Number(req.params.id)
     if(!Number.isInteger(id)){
-        return res.status(400).json({error:'Invalid user id'})
+        return res.status(400).json({error:'Invalid task id'})
     }
     try{
-        const tasks = await prisma.mytodos_task.findMany({
+        const tasks = await prisma.mytodos_task.findUnique({
             where:{
                 task_id:id
             }
@@ -58,7 +63,7 @@ router.post('/',async (req,res)=>{
         return res.status(201).json(task);
     }catch(err){
         console.log(err);
-        return res.status(500).json({error:'Failed to create user.'});
+        return res.status(500).json({error:'Failed to create task.'});
     }
 })
 

@@ -2,7 +2,7 @@ create table mytodos_user (
     user_id serial primary key,
     first_name text not null,
     last_name text,
-    email text not null,
+    email text not null unique,
     pwd text not null
 );
 
@@ -12,10 +12,4 @@ create table mytodos_task (
     done boolean,
     user_id integer not null references mytodos_user(user_id) on delete cascade,
     primary key (task_id,user_id)
-);
-
-SELECT setval(
-  pg_get_serial_sequence('mytodos_user', 'user_id'),
-  COALESCE((SELECT MAX(user_id) FROM mytodos_user), 0) + 1,
-  false
 );
