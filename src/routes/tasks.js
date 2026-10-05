@@ -41,14 +41,13 @@ router.get('/:id',async (req,res)=>{
 })
 
 router.post('/',async (req,res)=>{
-    console.log(req.cookies);
     const required = ["name"]
     const missing = required.filter((key)=>!req.body?.[key]);
     missing.concat(["user_id"].filter((key)=>!req.cookies[key]));
     if (missing.length>0){
          return res.status(400).json({error:`Missing fields: ${missing.join(", ")}`});
     }
-    const id = Number(req.cookies.user_id)
+    const id = Number(req.user.user_id)
     if(!Number.isInteger(id)){
         return res.status(400).json({error:'Invalid user id'})
     }
@@ -66,5 +65,24 @@ router.post('/',async (req,res)=>{
         return res.status(500).json({error:'Failed to create task.'});
     }
 })
+
+router.delete('/:id',async (req,res)=>{
+    const id = Number(req.params.id)
+    if(!Number.isInteger(id)){
+        return res.status(400).json({error:'Invalid task id'})
+    }
+    try {
+        await prisma.mytodos_task.deleteMany({
+            where:{
+                task_id:id
+            }
+        });
+        return res.json({message:"Blog deleted successfully"});
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({error:"Unable to delete task"});
+    }
+})
+
 
 export default router;
