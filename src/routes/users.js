@@ -1,5 +1,5 @@
 import express from 'express';
-import prisma from '../../db/prisma.js';
+import prisma from '../db/prisma.js';
 const router = express.Router();
 
 router.get('/',async (req,res)=>{
@@ -10,7 +10,7 @@ router.get('/',async (req,res)=>{
         res.send(users)
     } catch (err) {
         console.log(err);
-        res.status(500).json({error:'Failed to fetch users'});
+        return res.status(500).json({error:'Failed to fetch users'});
     }
     
 })
@@ -37,7 +37,6 @@ router.get('/:id',async (req,res)=>{
 })
 
 router.post('/', async (req, res)=>{
-    console.log(req.body);
     const required = ["first_name", "last_name", "email", "pwd"];
     const missing = required.filter((key) => !req.body?.[key]);
     if (missing.length>0){

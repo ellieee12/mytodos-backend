@@ -1,6 +1,6 @@
 import 'dotenv/config'; //used to load environment variables from local .env file
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../generated/prisma/client.ts';
+import { PrismaClient } from '../../generated/prisma/client.ts';
 
 const connectionString = `${process.env.DATABASE_URL}`; //Reads URL from the environment
 if (!connectionString) throw new Error("DATABASE_URL is not set");
