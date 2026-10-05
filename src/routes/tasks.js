@@ -77,10 +77,40 @@ router.delete('/:id',async (req,res)=>{
                 task_id:id
             }
         });
-        return res.json({message:"Blog deleted successfully"});
+        return res.json({message:"Task deleted successfully"});
     }catch(error){
         console.log(error);
         return res.status(500).json({error:"Unable to delete task"});
+    }
+})
+
+router.put("/:id",async(req,res)=>{
+    const id = Number(req.params.id)
+    if(!Number.isInteger(id)){
+        return res.status(400).json({error:'Invalid task id'})
+    }
+    const required = ["name"]
+    const missing = required.filter((key)=>!req.body?.[key]);
+    missing.concat(["user_id"].filter((key)=>!req.user.user_id));
+    if (missing.length>0){
+         return res.status(400).json({error:`Missing fields: ${missing.join(", ")}`});
+    }
+    try {
+        await prisma.mytodos_task.update({
+            where:{
+                task_id_user_id:{
+                    task_id:id,
+                    user_id:req.user.user_id
+                }
+            },
+            data:{
+                name:req.body.name
+            }
+        });
+        return res.json({message:"Task updated successfully"});
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({error:"Unable to update task"});
     }
 })
 
